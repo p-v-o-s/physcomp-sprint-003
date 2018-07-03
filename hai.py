@@ -43,6 +43,13 @@ def post_json(json):
     blink(1)    
     return r
 
+def post_to_feed(value,USER_NAME,FEED_KEY,FEED_NAME):
+    json=dict(value=value)
+    headers={'Content-Type': 'application/json','X-AIO-Key':FEED_KEY}                                                                     url='https://io.adafruit.com/api/v2/{username}/feeds/{feedname}/data.json'.format(username=USER_NAME,feedname=FEED_NAME) 
+    r=urequests.post(url,json=json,headers=headers)
+    blink(1)
+    return r
+
 def do_connect(essid=ESSID,password=PASSWORD):
     import network
     sta_if = network.WLAN(network.STA_IF)
