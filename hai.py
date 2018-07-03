@@ -8,24 +8,18 @@ from analogio import AnalogIn
 ESSID = 'nasa'
 PASSWORD = 'mars-adventure'
 USER_NAME = "donblair" #PLEASE CHANGE TO YOUR AIO USERNAME
-FEED_NAME = 'analog-feed-test-number-1' #PLEASE CHANGE TO YOUR AIO FEED NAME
+FEED_NAME = 'testA' #PLEASE CHANGE TO YOUR AIO FEED NAME
 FEED_KEY = '3515b3ecee734780927d7f4ab1654917'  #PLEASE CHANGE TO YOUR AIO KEY
-PARAMETER_PATH = 'params.txt'
 
 headers={'Content-Type': 'application/json','X-AIO-Key':FEED_KEY}
 url='https://io.adafruit.com/api/v2/{username}/feeds/{feedname}/data.json'.format(username=USER_NAME,feedname=FEED_NAME)
-
-def get_params():
-    f=open(PARAMETER_PATH)
-    p=f.read().strip().split(',')
-    return p
 
 def get_adc():
     with AnalogIn(board.ADC) as ai:
         return ai.value/65535.0
     #import machine
     #adc=machine.ADC(0)
-    #return adc.read()
+    #return adc.read()    
     
 def blink(sleeptime):
     import machine
@@ -34,9 +28,16 @@ def blink(sleeptime):
     time.sleep(sleeptime)
     led.value(1)
 
-def post(value):
+def post_json(json,FEED_KEY, FEED_NAME):
+    headers={'Content-Type': 'application/json','X-AIO-Key':FEED_KEY}
+    url='https://io.adafruit.com/api/v2/{username}/feeds/{feedname}/data.json'.format(username=USER_NAME,feedname=FEED_NAME)
+    r=urequests.post(url,json=json,headers=headers) 
+    blink(1)    
+    return r
+    
+def post(value,FEED_KEY, FEED_NAME):
     json=dict(value=value)
-    post_json(json)
+    post_json(json,FEED_KEY, FEED_NAME)
     
 def post_json(json):
     r=urequests.post(url,json=json,headers=headers) 
